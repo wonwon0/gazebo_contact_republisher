@@ -9,7 +9,7 @@
 #include <nav_msgs/Odometry.h>
 #include <ros/ros.h>
 #include <geometry_msgs/Vector3.h>
-
+#include <contact_republisher/contact_msg.h>
 #include <iostream>
 
 ros::Publisher pub;
@@ -17,7 +17,7 @@ bool airborne;
 
 // Forces callback function
 void forcesCb(ConstContactsPtr &_msg){
-    geometry_msgs::Vector3 msgForce;
+    contact_republisher::contact_msg msgForce;
     // What to do when callback
     for (int i = 0; i < _msg->contact_size(); ++i) {
         msgForce.x = _msg->contact(i).normal().Get(0).x();
@@ -58,7 +58,7 @@ int main(int _argc, char **_argv){
 
     // Create ROS node and init
     ros::NodeHandle n;
-    pub = n.advertise<geometry_msgs::Vector3>("forces", 1000);
+    pub = n.advertise<contact_republisher::contact_msg>("forces", 1000);
 
     // Listen to Gazebo contacts topic
     gazebo::transport::SubscriberPtr sub = node->Subscribe("/gazebo/default/physics/contacts", forcesCb);

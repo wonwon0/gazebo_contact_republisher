@@ -14,9 +14,8 @@ endif()
 find_package(catkin REQUIRED COMPONENTS
     roscpp
     std_msgs
-    gazebo
-    gazebo_msgs
     message_generation
+    geometry_msgs
 )
 
 include(FindBoost)
@@ -61,7 +60,7 @@ find_package(Protobuf REQUIRED)
    contact_msg.msg
    contacts_msg.msg
  )
-
+generate_messages(DEPENDENCIES std_msgs)
 ## Generate services in the 'srv' folder
 # add_service_files(
 #   FILES
@@ -116,8 +115,7 @@ catkin_package(
 #  LIBRARIES contact_republisher
 #  CATKIN_DEPENDS roscpp std_msgs
 #  DEPENDS system_lib
-    CATKIN_DEPENDS gazebo_msgs
-    CATKIN_DEPENDS message_runtime
+    CATKIN_DEPENDS gazebo_msgs message_runtime
 )
 
 ###########
@@ -161,7 +159,6 @@ add_executable(${PROJECT_NAME}_node src/main.cpp)
  target_link_libraries(${PROJECT_NAME}_node
    ${catkin_LIBRARIES}
  )
-
 #############
 ## Install ##
 #############
