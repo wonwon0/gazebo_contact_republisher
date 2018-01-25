@@ -16,6 +16,7 @@ find_package(catkin REQUIRED COMPONENTS
     std_msgs
     gazebo
     gazebo_msgs
+    message_generation
 )
 
 include(FindBoost)
@@ -55,11 +56,11 @@ find_package(Protobuf REQUIRED)
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
-#   Message1.msg
-#   Message2.msg
-# )
+ add_message_files(
+   FILES
+   contact_msg.msg
+   contacts_msg.msg
+ )
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -115,8 +116,8 @@ catkin_package(
 #  LIBRARIES contact_republisher
 #  CATKIN_DEPENDS roscpp std_msgs
 #  DEPENDS system_lib
-    DEPENDS gazebo_ros
     CATKIN_DEPENDS gazebo_msgs
+    CATKIN_DEPENDS message_runtime
 )
 
 ###########
