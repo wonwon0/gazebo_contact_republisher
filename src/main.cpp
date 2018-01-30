@@ -22,17 +22,40 @@ void forcesCb(ConstContactsPtr &_msg){
     std::vector<contact_republisher::contact_msg> contacts_list;
     // What to do when callback
     for (int i = 0; i < _msg->contact_size(); ++i) {
+
         contact_republisher::contact_msg contact_message;
+
+        contact_message.collision_1 = _msg->contact(i).collision1();
+        contact_message.collision_2 = _msg->contact(i).collision2();
+
         contact_message.normal[0] = _msg->contact(i).normal().Get(0).x();
         contact_message.normal[1] = _msg->contact(i).normal().Get(0).y();
         contact_message.normal[2] = _msg->contact(i).normal().Get(0).z();
+
+        contact_message.position[0] = _msg->contact(i).position().Get(0).x();
+        contact_message.position[1] = _msg->contact(i).position().Get(0).y();
+        contact_message.position[2] = _msg->contact(i).position().Get(0).z();
+
+        contact_message.depth = _msg->contact(i).depth().Get(0);
+
         contacts_list.push_back(contact_message);
     }
     if ( _msg->contact_size()== 0){
         contact_republisher::contact_msg contact_message;
+
+        contact_message.collision_1 = "default";
+        contact_message.collision_2 = "default";
+
         contact_message.normal[0] = 0;
         contact_message.normal[1] = 0;
         contact_message.normal[2] = 0;
+
+        contact_message.position[0] = 0;
+        contact_message.position[1] = 0;
+        contact_message.position[2] = 0;
+
+        contact_message.depth = 0;
+
         contacts_list.push_back(contact_message);
     }
     contacts_message.contacts = contacts_list;
