@@ -10,28 +10,33 @@
 #include <ros/ros.h>
 #include <geometry_msgs/Vector3.h>
 #include <contact_republisher/contact_msg.h>
+#include <contact_republisher/contacts_msg.h>
 #include <iostream>
-
+#include <vector>
 ros::Publisher pub;
 bool airborne;
 
 // Forces callback function
 void forcesCb(ConstContactsPtr &_msg){
-    contact_republisher::contact_msg msgForce;
+    contact_republisher::contacts_msg contacts_message;
+    std::vector<contact_republisher::contact_msg> contacts_list;
     // What to do when callback
     for (int i = 0; i < _msg->contact_size(); ++i) {
-        msgForce.x = _msg->contact(i).normal().Get(0).x();
-        msgForce.y = _msg->contact(i).normal().Get(0).y();
-        msgForce.z = _msg->contact(i).normal().Get(0).z();
-        pub.publish(msgForce);
-        gazebo::common::Time::MSleep(20);
+        contact_republisher::contact_msg contact_message;
+        contact_message.normal[0] = _msg->contact(i).normal().Get(0).x();
+        contact_message.normal[1] = _msg->contact(i).normal().Get(0).y();
+        contact_message.normal[2] = _msg->contact(i).normal().Get(0).z();
+        contacts_list.push_back(contact_message);
     }
     if ( _msg->contact_size()== 0){
-        msgForce.x = 0;
-        msgForce.y = 0;
-        msgForce.z = 0;
-        pub.publish(msgForce);
+        contact_republisher::contact_msg contact_message;
+        contact_message.normal[0] = 0;
+        contact_message.normal[1] = 0;
+        contact_message.normal[2] = 0;
+        contacts_list.push_back(contact_message);
     }
+    contacts_message.contacts = contacts_list;
+    pub.publish(contacts_message);
 
 }
 
@@ -58,7 +63,7 @@ int main(int _argc, char **_argv){
 
     // Create ROS node and init
     ros::NodeHandle n;
-    pub = n.advertise<contact_republisher::contact_msg>("forces", 1000);
+    pub = n.advertise<contact_republisher::contacts_msg>("forces", 1000);
 
     // Listen to Gazebo contacts topic
     gazebo::transport::SubscriberPtr sub = node->Subscribe("/gazebo/default/physics/contacts", forcesCb);
