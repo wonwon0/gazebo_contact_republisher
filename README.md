@@ -1,5 +1,5 @@
 # gazebo_contact_republisher
-publishes a custom rostopic message fomr the gazebo::msgs:contacts gz topic
+publishes a custom rostopic message from the gazebo::msgs:contacts gz topic
 
 
 The need for this whole thing arrises from the lack of communication tools between Gazebo and Matlab. 
